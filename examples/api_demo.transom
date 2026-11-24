@@ -1,0 +1,99 @@
+// ============================================================================
+// Transom 3.0 — GitHub Profile Explorer (Light-First Modern UI + Live API)
+// Run:   ./transom run examples/api_demo.transom
+// Watch: ./transom watch examples/api_demo.transom
+// ============================================================================
+
+style "./theme.tstyle"
+
+app "GitHub Explorer — Transom 3.0" (width: 580, height: 470) {
+    state username = "Moaaz-i"
+    state rawJson = ""
+    state darkMode = false
+    state status = "Enter any GitHub username and click Fetch."
+
+    derived login = jsonGet(rawJson, "login")
+    derived displayName = jsonGet(rawJson, "name")
+    derived bio = jsonGet(rawJson, "bio")
+    derived repos = jsonGet(rawJson, "public_repos")
+    derived followers = jsonGet(rawJson, "followers")
+    derived following = jsonGet(rawJson, "following")
+    derived profileUrl = jsonGet(rawJson, "html_url")
+    derived hasData = len(login) > 0
+
+    view VStack(gap: 16, padding: 28) {
+        Card(class: "heroCard", gap: 16, width: 510) {
+            // Header
+            HStack(gap: 12) {
+                Card(padding: 10, bg: "#eff6ff", radius: 12, width: 44, height: 44) {
+                    Icon("globe", size: 20, color: "#3b5bdb")
+                }
+                VStack(gap: 2, align: "leading") {
+                    Text("GitHub API Explorer", class: "heading", align: "left")
+                    Text(status, class: "subtitle", align: "left")
+                }
+                Spacer()
+                Button("", icon: "moon.stars", class: "outlineBtn", width: 36) {
+                    darkMode = !darkMode
+                    if darkMode { setTheme("dark") } else { setTheme("default") }
+                }
+            }
+
+            // Search Bar
+            HStack(gap: 10) {
+                Input(bind: username, placeholder: "GitHub username (e.g. Moaaz-i)", width: 310)
+                Button("Fetch", icon: "arrow.down.circle", class: "primaryBtn", width: 130) {
+                    if len(username) > 0 {
+                        status = "Fetching @{username}..."
+                        httpFetch("https://api.github.com/users/{username}", "rawJson")
+                    }
+                }
+            }
+
+            Divider(width: 460)
+
+            // Profile Result Area
+            if !hasData {
+                Card(class: "statCard", padding: 22, width: 460) {
+                    Text("Ready to fetch live data from api.github.com", class: "subtitle")
+                }
+            } else {
+                VStack(gap: 12) {
+                    HStack(gap: 10) {
+                        Icon("person.crop.circle.fill", size: 28, color: "#3b5bdb")
+                        VStack(gap: 2, align: "leading") {
+                            Text(if len(displayName) > 0 { displayName } else { "@{login}" }, size: 17, weight: "bold")
+                            Text(if len(bio) > 0 { bio } else { "GitHub Developer • @{login}" }, class: "subtitle", align: "left")
+                        }
+                        Spacer()
+                    }
+
+                    HStack(gap: 10) {
+                        Card(class: "statCard", width: 146) {
+                            Text(repos, class: "statValue")
+                            Text("Repositories", class: "statLabel")
+                        }
+                        Card(class: "statCard", width: 146) {
+                            Text(followers, class: "statValue")
+                            Text("Followers", class: "statLabel")
+                        }
+                        Card(class: "statCard", width: 146) {
+                            Text(following, class: "statValue")
+                            Text("Following", class: "statLabel")
+                        }
+                    }
+
+                    HStack(gap: 10) {
+                        Button("Open on GitHub", icon: "safari", class: "softBtn", width: 224) {
+                            if len(profileUrl) > 0 { openUrl(profileUrl) }
+                        }
+                        Button("Copy Raw JSON", icon: "doc.on.doc", class: "outlineBtn", width: 224) {
+                            clipboardCopy(rawJson)
+                            status = "Copied raw JSON to clipboard!"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

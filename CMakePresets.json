@@ -1,0 +1,32 @@
+{
+  "version": 6,
+  "configurePresets": [
+    {
+      "name": "macos-release",
+      "displayName": "macOS Release (AppKit)",
+      "binaryDir": "${sourceDir}/build/macos-release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "windows-native",
+      "displayName": "Windows Native (Win32 + Direct2D)",
+      "binaryDir": "${sourceDir}/build/windows-native",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "windows-cross-mingw",
+      "displayName": "Windows x86_64 Cross-Compile (MinGW-w64)",
+      "binaryDir": "${sourceDir}/build/windows-cross",
+      "cacheVariables": {
+        "CMAKE_SYSTEM_NAME": "Windows",
+        "CMAKE_C_COMPILER": "x86_64-w64-mingw32-gcc",
+        "CMAKE_CXX_COMPILER": "x86_64-w64-mingw32-g++",
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+// ============================================================================
+// Transom 3.0 — Styled & Theme-Switching Native App (.transom + .tstyle)
+// Run:   ./transom run examples/themed_app.transom
+// Watch: ./transom watch examples/themed_app.transom (edit theme.tstyle live!)
+// ============================================================================
+
+style "./theme.tstyle"
+
+app "Transom Design System" (width: 500, height: 360) {
+    state note = ""
+    state themeLabel = "Light (Default)"
+
+    view VStack(gap: 16, padding: 24) {
+        Text("Transom .tstyle", class: "heading")
+        Text("Current theme: {themeLabel}", class: "subtitle")
+
+        Card(class: "accentCard", gap: 10) {
+            Text("Type below, then switch themes — your input stays intact!", class: "subtitle")
+            Input(bind: note, placeholder: "Type something...")
+        }
+
+        HStack(gap: 10) {
+            Button("Light Theme", class: "primaryBtn", grow: 1.0) {
+                if setTheme("default") {
+                    themeLabel = "Light (Default)"
+                }
+            }
+            Button("Dark Theme", class: "outlineBtn", grow: 1.0) {
+                if setTheme("dark") {
+                    themeLabel = "Dark"
+                }
+            }
+        }
+    }
+}

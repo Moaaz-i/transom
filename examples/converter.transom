@@ -1,0 +1,57 @@
+// ============================================================================
+// Transom 3.0 — Interactive Temperature Converter
+// Showcases: const, two-way Input & Slider bindings, derived signals, Grid
+// Run: ./transom run examples/converter.transom
+// ============================================================================
+
+const KELVIN_OFFSET = 273.15
+
+fn cToF(c: Float) -> Int {
+    return round(c * 9.0 / 5.0 + 32.0)
+}
+
+fn cToK(c: Float) -> Int {
+    return round(c + KELVIN_OFFSET)
+}
+
+app "Temperature Studio" (width: 480, height: 380, bg: "#0f121a") {
+    state name = ""
+    persist state celsius = 22.0
+
+    derived greeting = if len(strTrim(name)) == 0 {
+        "Temperature Converter"
+    } else {
+        "Hello, {strTrim(name)}!"
+    }
+    derived fahrenheit = cToF(celsius)
+    derived kelvin = cToK(celsius)
+    derived cInt = round(celsius)
+
+    view VStack(gap: 16, padding: 24) {
+        Text(greeting, size: 22, weight: "bold", color: "#f8fafc")
+
+        Input(bind: name, placeholder: "Type your name...")
+
+        Card(padding: 20, bg: "#151924", radius: 14, gap: 12, borderColor: "#262d3d", borderWidth: 1) {
+            Text("{cInt} °C", size: 36, weight: "bold", color: "#38bdf8", align: "center")
+            Grid(columns: 2, gap: 12) {
+                Card(padding: 12, bg: "#1e2330", radius: 10) {
+                    Text("{fahrenheit} °F", size: 18, weight: "semibold", color: "#fbbf24", align: "center")
+                    Text("Fahrenheit", size: 11, color: "#94a3b8", align: "center")
+                }
+                Card(padding: 12, bg: "#1e2330", radius: 10) {
+                    Text("{kelvin} K", size: 18, weight: "semibold", color: "#a78bfa", align: "center")
+                    Text("Kelvin", size: 11, color: "#94a3b8", align: "center")
+                }
+            }
+        }
+
+        Slider(bind: celsius, min: -40.0, max: 120.0)
+
+        HStack(gap: 10) {
+            Button("Freezing (0°C)", grow: 1.0) { celsius = 0.0 }
+            Button("Room (22°C)", grow: 1.0) { celsius = 22.0 }
+            Button("Boiling (100°C)", style: "primary", grow: 1.0) { celsius = 100.0 }
+        }
+    }
+}

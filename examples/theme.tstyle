@@ -1,0 +1,114 @@
+// ============================================================================
+// Transom 3.0 — Modern Light-First Design System (.tstyle)
+// Crisp light aesthetic by default + instant Dark Mode override
+// ============================================================================
+
+tokens {
+    bg: "#f1f5f9"
+    surface: "#ffffff"
+    surfaceSubtle: "#f8fafc"
+    border: "#e2e8f0"
+    accent: "#3b5bdb"
+    accentSoft: "#eff6ff"
+    accentBorder: "#bfdbfe"
+    accentText: "#2563eb"
+    textPrimary: "#0f172a"
+    textMuted: "#64748b"
+    radiusMd: 14dp
+    padMd: 18dp
+}
+
+theme "dark" {
+    bg: "#0f121a"
+    surface: "#151924"
+    surfaceSubtle: "#1e2330"
+    border: "#2a3142"
+    accent: "#4c6ef5"
+    accentSoft: "#1e293b"
+    accentBorder: "#334155"
+    accentText: "#60a5fa"
+    textPrimary: "#f8fafc"
+    textMuted: "#94a3b8"
+}
+
+Card {
+    bg: $surface
+    radius: $radiusMd
+    padding: $padMd
+    borderColor: $border
+    borderWidth: 1
+}
+
+style heroCard : Card {
+    radius: 18dp
+    padding: 24dp
+    shadow: 16
+}
+
+style statCard : Card {
+    bg: $surfaceSubtle
+    radius: 12dp
+    padding: 12dp
+    borderColor: $border
+    borderWidth: 1
+}
+
+style accentCard : Card {
+    borderColor: $accentBorder
+    borderWidth: 1
+    shadow: 10
+}
+
+style heading {
+    size: 22pt
+    weight: "bold"
+    color: $textPrimary
+}
+
+style subtitle {
+    size: 13pt
+    color: $textMuted
+}
+
+style statValue {
+    size: 20pt
+    weight: "bold"
+    color: $textPrimary
+}
+
+style statLabel {
+    size: 11pt
+    weight: "semibold"
+    color: $textMuted
+}
+
+style primaryBtn {
+    bg: $accent
+    color: "#ffffff"
+    radius: 10dp
+    size: 13pt
+    weight: "semibold"
+    height: 36dp
+}
+
+style softBtn {
+    bg: $accentSoft
+    color: $accentText
+    borderColor: $accentBorder
+    borderWidth: 1
+    radius: 10dp
+    size: 12pt
+    weight: "semibold"
+    height: 34dp
+}
+
+style outlineBtn {
+    bg: $surface
+    color: $textPrimary
+    borderColor: $border
+    borderWidth: 1
+    radius: 10dp
+    size: 12pt
+    weight: "medium"
+    height: 34dp
+}

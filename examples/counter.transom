@@ -1,0 +1,39 @@
+// ============================================================================
+// Transom 3.0 — Persistent Reactive Counter
+// Showcases: persist state, derived, component slots, default parameters
+// Run:   ./transom run examples/counter.transom
+// Watch: ./transom watch examples/counter.transom
+// ============================================================================
+
+component Panel(title: String, bg: String = "#1e2330") {
+    Card(padding: 20, bg: bg, radius: 14, gap: 12) {
+        Text(title, size: 13, weight: "semibold", color: "#94a3b8")
+        slot
+    }
+}
+
+app "Transom Counter" (width: 420, height: 320, bg: "#0f121a") {
+    persist state count = 0
+    derived status = if count == 0 {
+        "Zero"
+    } else if count > 0 {
+        "Positive (+{count})"
+    } else {
+        "Negative ({count})"
+    }
+
+    view VStack(gap: 18, padding: 28, align: "center") {
+        Text("Transom 3.0 Counter", size: 22, weight: "bold", color: "#f8fafc")
+
+        Panel(title: "CURRENT VALUE (AUTO-SAVED)") {
+            Text("{count}", size: 44, weight: "bold", color: "#38bdf8", align: "center")
+            Text(status, size: 13, color: "#94a3b8", align: "center")
+        }
+
+        HStack(gap: 10) {
+            Button("-1", width: 88) { count -= 1 }
+            Button("Reset", width: 96) { count = 0 }
+            Button("+1", style: "primary", width: 88) { count += 1 }
+        }
+    }
+}

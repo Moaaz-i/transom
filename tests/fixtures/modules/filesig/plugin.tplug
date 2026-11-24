@@ -1,0 +1,34 @@
+// Test fixture: domain-neutral .tplug module (Bytes type, fs.read permission).
+plugin "filesig" {
+    version: "1.0.0"
+    description: "File signature (magic bytes) checking"
+    requires: {
+        transom: ">=2.0.0"
+    }
+    permissions: ["fs.read"]
+
+    export fn hasSig(path: String, sig: String) -> Bool {
+        if !fsExists(path) {
+            return false
+        }
+        let raw = bytesRead(path)
+        let n = len(sig)
+        if bytesLen(raw) < n {
+            return false
+        }
+        return bytesToString(bytesSlice(raw, 0, n)) == sig
+    }
+
+    export fn byteCount(path: String) -> Int {
+        if !fsExists(path) {
+            return 0
+        }
+        return bytesLen(bytesRead(path))
+    }
+
+    export component SigBadge(size: Int) {
+        Card(padding: 8, bg: "#1e2330", radius: 8) {
+            Text("{size} bytes", size: 13, color: "#38bdf8")
+        }
+    }
+}

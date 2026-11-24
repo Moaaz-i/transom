@@ -1,0 +1,90 @@
+// ============================================================================
+// Transom 3.0 — Reactive Todo List
+// Showcases: struct, enum, match, List<Task>, if/for views, Spacer
+// Run: ./transom run examples/todo.transom
+// ============================================================================
+
+struct Task {
+    title: String
+    done: Bool
+}
+
+enum Filter {
+    All
+    Active
+    Done
+}
+
+fn shouldShow(done: Bool, filter: Filter) -> Bool {
+    return match filter {
+        Filter.All => true
+        Filter.Active => !done
+        Filter.Done => done
+    }
+}
+
+app "Transom Tasks" (width: 520, height: 460, bg: "#0f121a") {
+    state draft = ""
+    state filter = Filter.All
+    state tasks: List<Task> = [
+        Task(title: "Design clean declarative UI", done: true),
+        Task(title: "Add reactive state and derived signals", done: false),
+        Task(title: "Export native desktop bundle", done: false)
+    ]
+
+    derived total = len(tasks)
+    derived filterLabel = match filter {
+        Filter.All => "All"
+        Filter.Active => "Active"
+        Filter.Done => "Completed"
+    }
+
+    view VStack(gap: 14, padding: 24) {
+        HStack(gap: 10) {
+            Text("Tasks ({total})", size: 22, weight: "bold", color: "#f8fafc")
+            Spacer()
+            Text("Filter: {filterLabel}", size: 12, color: "#94a3b8")
+        }
+
+        HStack(gap: 8) {
+            Input(bind: draft, placeholder: "Add a new task...", grow: 1.0)
+            Button("Add", style: "primary", width: 84) {
+                let clean = strTrim(draft)
+                if len(clean) > 0 {
+                    push(tasks, Task(title: clean, done: false))
+                    draft = ""
+                }
+            }
+        }
+
+        HStack(gap: 8) {
+            Button("All") { filter = Filter.All }
+            Button("Active") { filter = Filter.Active }
+            Button("Done") { filter = Filter.Done }
+        }
+
+        if total == 0 {
+            Card(padding: 20, bg: "#151924", radius: 12) {
+                Text("All caught up! Add a task above.", size: 14, color: "#94a3b8", align: "center")
+            }
+        } else {
+            ScrollView(gap: 8) {
+                for (i, task) in tasks {
+                    if shouldShow(task.done, filter) {
+                        Card(padding: 12, bg: "#151924", radius: 10, borderColor: "#262d3d", borderWidth: 1) {
+                            HStack(gap: 10) {
+                                Button(if task.done { "✓" } else { "○" }, width: 36) {
+                                    tasks[i].done = !tasks[i].done
+                                }
+                                Text(task.title, size: 15, color: if task.done { "#64748b" } else { "#f8fafc" }, grow: 1.0)
+                                Button("Delete", width: 72) {
+                                    removeAt(tasks, i)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
