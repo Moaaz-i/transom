@@ -1,7 +1,24 @@
-# Core-only repository ignore rules
-.DS_Store
-build/
-transom
+# Allowlist mode: ignore everything by default, track only Transom Core & examples
+/*
+
+!.gitignore
+!README.md
+!Makefile
+!CMakeLists.txt
+!CMakePresets.json
+!src/
+!src/**
+!include/
+!include/**
+!examples/
+!examples/**
+!tests/
+!tests/**
+!scripts/
+!scripts/**
+
+# Exclude build artifacts, binaries, OS metadata, and non-core example
+examples/pdf_inspector.transom
 *.o
 *.d
 *.tbc
@@ -9,12 +26,4 @@ transom
 *.dll
 *.so
 *.exe
-*.app/
-transom.lock
-
-# Keep the core repository strictly free of plugins, editors, docs site, and scratch apps
-plugins/
-editors/
-docs/
-my-app/
-examples/pdf_inspector.transom
+.DS_Store
